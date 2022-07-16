@@ -1,0 +1,24 @@
+basePath: /api
+host: localhost:5000
+info:
+  contact: {}
+  title: Conduit
+  version: "1.0"
+paths:
+  /api/users/:
+    post:
+      produces:
+      - text/html
+      responses: {}
+      summary: User registration
+      tags:
+      - users
+  /api/users/login:
+    post:
+      produces:
+      - text/html
+      responses: {}
+      summary: User login
+      tags:
+      - users
+swagger: "2.0"

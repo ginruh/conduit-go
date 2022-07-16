@@ -5,20 +5,20 @@ info:
   title: Conduit
   version: "1.0"
 paths:
-  /api/users/:
+  /users:
     post:
       produces:
-      - text/html
+      - application/json
       responses: {}
       summary: User registration
       tags:
-      - users
-  /api/users/login:
+      - Users
+  /users/login:
     post:
       produces:
-      - text/html
+      - application/json
       responses: {}
       summary: User login
       tags:
-      - users
+      - Users
 swagger: "2.0"

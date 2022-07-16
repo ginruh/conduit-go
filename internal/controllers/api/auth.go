@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/iyorozuya/real-world-app/internal/services/api"
+	"github.com/iyorozuya/real-world-app/internal/utils"
 	"net/http"
 )
 
@@ -11,18 +12,20 @@ type AuthController struct {
 
 // Register godoc
 // @Summary  User registration
-// @Tags     users
-// @Produce  text/html
-// @Router   /api/users/ [post]
+// @Tags     Users
+// @Produce  application/json
+// @Router   /users [post]
 func (c AuthController) Register(w http.ResponseWriter, r *http.Request) {
-	c.AuthService.Register()
+	registerUserResponse := c.AuthService.Register()
+	utils.SendResponse(w, http.StatusOK, registerUserResponse)
 }
 
 // Login godoc
 // @Summary  User login
-// @Tags     users
-// @Produce  text/html
-// @Router   /api/users/login [post]
+// @Tags     Users
+// @Produce  application/json
+// @Router   /users/login [post]
 func (c AuthController) Login(w http.ResponseWriter, r *http.Request) {
-	c.AuthService.Login()
+	loginResponse := c.AuthService.Login()
+	utils.SendResponse(w, http.StatusOK, loginResponse)
 }

@@ -16,25 +16,25 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/users/": {
+        "/users": {
             "post": {
                 "produces": [
-                    "text/html"
+                    "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "User registration",
                 "responses": {}
             }
         },
-        "/api/users/login": {
+        "/users/login": {
             "post": {
                 "produces": [
-                    "text/html"
+                    "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "User login",
                 "responses": {}

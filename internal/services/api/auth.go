@@ -1,16 +1,47 @@
 package api
 
+import (
+	"github.com/iyorozuya/real-world-app/internal/types"
+	"github.com/iyorozuya/real-world-app/internal/utils"
+)
+
 type AuthService interface {
-	Login()
-	Register()
+	Login() LoginResponse
+	Register() RegisterUserResponse
 }
 
-type AuthServiceImpl struct{}
-
-func (service AuthServiceImpl) Login() {
-
+type AuthServiceImpl struct {
+	DB *utils.DB
 }
 
-func (service AuthServiceImpl) Register() {
+type LoginResponse struct {
+	User types.User `json:"user"`
+}
 
+func (service AuthServiceImpl) Login() LoginResponse {
+	return LoginResponse{
+		User: types.User{
+			Email:    "iyaksha@tutanota.com",
+			Token:    "abcdef",
+			Username: "gintamashi",
+			Bio:      "Silver soul",
+			Image:    "",
+		},
+	}
+}
+
+type RegisterUserResponse struct {
+	User types.User `json:"user"`
+}
+
+func (service AuthServiceImpl) Register() RegisterUserResponse {
+	return RegisterUserResponse{
+		User: types.User{
+			Email:    "iyaksha@tutanota.com",
+			Token:    "abcdef",
+			Username: "gintamashi",
+			Bio:      "Silver soul",
+			Image:    "",
+		},
+	}
 }

@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     environment:
       MARIADB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${DB_NAME}"
   api:
     image: conduit:latest
     restart: unless-stopped

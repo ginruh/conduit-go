@@ -1,11 +1,12 @@
 version: '3.8'
 services:
   db:
-    image: mariadb:10.8.3
+    image: postgres:14.4
     restart: unless-stopped
     environment:
-      MARIADB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
-      MYSQL_DATABASE: "${DB_NAME}"
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: "${DB_ROOT_PASSWORD}"
+      POSTGRES_DB: "${DB_NAME}"
   api:
     image: conduit:latest
     restart: unless-stopped

@@ -1,3 +1,6 @@
+#!make
+include .env
+
 build:
 	go build -o bin/api cmd/api/main.go
 
@@ -18,3 +21,9 @@ dev-start:
 
 dev-stop:
 	./scripts/dev.sh down
+
+migrate-up:
+	goose -dir internal/migrations postgres "postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable" up
+
+migrate-down:
+	goose -dir internal/migrations postgres "postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable" down

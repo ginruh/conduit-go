@@ -2,26 +2,50 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/go-playground/validator/v10"
+	"io"
 	"log"
 	"net/http"
 )
 
+func ValidateBody(body io.ReadCloser, validate *validator.Validate, params interface{}) ValidationError {
+	if err := json.NewDecoder(body).Decode(params); err != nil {
+		return ValidationError{
+			"body": []string{"invalid request body"},
+		}
+	}
+	var errs []string
+	if err := validate.Struct(params); err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			errs = append(errs, fmt.Sprintf("%s should be %s", err.Field(), err.Tag()))
+		}
+	}
+	if len(errs) > 0 {
+		return ValidationError{"body": errs}
+	}
+	return nil
+}
+
 func SendResponse(w http.ResponseWriter, code int, response interface{}) {
-	responseEncoder := json.NewEncoder(w)
-	if err := responseEncoder.Encode(response); err != nil {
-		log.Fatalln("Unable to encode to json", err)
-		w.WriteHeader(500)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		log.Println("Unable to encode to json", err)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
 }
 
-type ErrorResponse struct {
-	errors interface{}
+type ValidationError map[string][]string
+
+func SendError(w http.ResponseWriter, code int, error string) {
+	SendResponse(w, code, map[string]interface{}{
+		"errors": []string{error},
+	})
 }
 
-func SendError(w http.ResponseWriter, code int, errors interface{}) {
-	SendResponse(w, code, ErrorResponse{
-		errors,
+func SendErrors(w http.ResponseWriter, code int, errors map[string][]string) {
+	SendResponse(w, code, map[string]interface{}{
+		"errors": errors,
 	})
 }

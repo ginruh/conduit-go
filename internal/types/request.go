@@ -21,3 +21,13 @@ type GetProfileParams struct {
 	Username          string `json:"username" type:"string" validate:"required,alphanum"`
 	AuthenticatedUser int    `validate:"omitempty"`
 }
+
+type FollowUserParams struct {
+	Username    string `json:"username" type:"string" validate:"required,alphanum"`
+	CurrentUser int    `validate:"omitempty"`
+}
+
+type UnfollowUserParams struct {
+	Username    string `json:"username" type:"string" validate:"required,alphanum"`
+	CurrentUser int    `validate:"omitempty"`
+}

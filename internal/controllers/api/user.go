@@ -65,10 +65,36 @@ func (c UserController) GetProfile(w http.ResponseWriter, r *http.Request) {
 
 // FollowUser godoc
 func (c UserController) FollowUser(w http.ResponseWriter, r *http.Request) {
-
+	followUserParams := types.FollowUserParams{
+		Username:    chi.URLParam(r, "username"),
+		CurrentUser: r.Context().Value("userId").(int),
+	}
+	if validationErr := utils.ValidateStruct(c.validate, &followUserParams); validationErr != nil {
+		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
+		return
+	}
+	profile, err := c.userService.Follow(followUserParams)
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.SendResponse(w, http.StatusOK, profile)
 }
 
 // UnfollowUser godoc
 func (c UserController) UnfollowUser(w http.ResponseWriter, r *http.Request) {
-
+	unfollowUserParams := types.UnfollowUserParams{
+		Username:    chi.URLParam(r, "username"),
+		CurrentUser: r.Context().Value("userId").(int),
+	}
+	if validationErr := utils.ValidateStruct(c.validate, &unfollowUserParams); validationErr != nil {
+		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
+		return
+	}
+	profile, err := c.userService.Unfollow(unfollowUserParams)
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.SendResponse(w, http.StatusOK, profile)
 }

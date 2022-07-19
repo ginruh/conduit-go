@@ -29,14 +29,19 @@ func Bootstrap(r chi.Router, database *sql.DB) {
 	// User authenticated actions
 	r.Group(func(r chi.Router) {
 		r.Use(middlewares.JWT)
+		// auth
 		r.Get("/user", userController.GetCurrentUser)
 		r.Put("/user", userController.UpdateUser)
+
+		// profiles
+		r.Post("/profiles/{username}/follow", userController.FollowUser)
+		r.Delete("/profiles/{username}/follow", userController.UnfollowUser)
 	})
 
 	// Optional authenticated routes
 	r.Group(func(r chi.Router) {
 		r.Use(middlewares.OptionalJWT)
-		r.Get("/profile/{username}", userController.GetProfile)
+		r.Get("/profiles/{username}", userController.GetProfile)
 	})
 
 	// Seed db if RUN_SEEDERS is yes

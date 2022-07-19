@@ -9,6 +9,8 @@ type UserService interface {
 	Get(id int) (*GetUserResponse, error)
 	Update(id int, params types.UpdateUserParams) (*UpdateUserResponse, error)
 	GetProfile(params types.GetProfileParams) (*GetProfileResponse, error)
+	Follow(params types.FollowUserParams) (*FollowUserResponse, error)
+	Unfollow(params types.UnfollowUserParams) (*UnfollowUserResponse, error)
 }
 
 type UserServiceImpl struct {

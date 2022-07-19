@@ -18,3 +18,10 @@ type User struct {
 	CreatedAt sql.NullTime
 	UpdatedAt sql.NullTime
 }
+
+type UserFollower struct {
+	UserID     int32
+	FollowerID int32
+	CreatedAt  sql.NullTime
+	UpdatedAt  sql.NullTime
+}

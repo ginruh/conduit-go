@@ -28,7 +28,7 @@ func (service AuthServiceImpl) Register(params types.RegisterParams) (*RegisterU
 	if err != nil {
 		return nil, errors.New("user already exists")
 	}
-	token, err := generateUserToken(string(passwordHash), params.Password, int(user.ID))
+	token, err := GenerateUserToken(int(user.ID))
 	if err != nil {
 		return nil, errors.New("internal server error")
 	}

@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 	"errors"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/iyorozuya/real-world-app/internal/types"
 	"golang.org/x/crypto/bcrypt"
 	"os"
@@ -18,7 +18,11 @@ func (service AuthServiceImpl) Login(params types.LoginParams) (*LoginResponse, 
 	if err != nil {
 		return nil, errors.New("invalid email or password")
 	}
-	token, err := generateUserToken(user.Password, params.Password, int(user.ID))
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(params.Password))
+	if err != nil {
+		return nil, errors.New("invalid email or password")
+	}
+	token, err := GenerateUserToken(int(user.ID))
 	if err != nil {
 		return nil, err
 	}
@@ -33,11 +37,7 @@ func (service AuthServiceImpl) Login(params types.LoginParams) (*LoginResponse, 
 	}, nil
 }
 
-func generateUserToken(hashedPassword, password string, userID int) (string, error) {
-	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-	if err != nil {
-		return "", errors.New("invalid email or password")
-	}
+func GenerateUserToken(userID int) (string, error) {
 	jwtSecret := os.Getenv("JWT_SECRET")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id": userID,
@@ -47,4 +47,19 @@ func generateUserToken(hashedPassword, password string, userID int) (string, err
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func VerifyUserToken(tokenString string) (int, error) {
+	type tokenClaims struct {
+		ID int `json:"id"`
+		jwt.RegisteredClaims
+	}
+	token, err := jwt.ParseWithClaims(tokenString, &tokenClaims{}, func(t *jwt.Token) (interface{}, error) {
+		jwtSecret := os.Getenv("JWT_SECRET")
+		return []byte(jwtSecret), nil
+	})
+	if claims, ok := token.Claims.(*tokenClaims); ok && token.Valid {
+		return claims.ID, nil
+	}
+	return 0, err
 }

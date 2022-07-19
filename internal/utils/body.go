@@ -9,12 +9,25 @@ import (
 	"net/http"
 )
 
-func ValidateBody(body io.ReadCloser, validate *validator.Validate, params interface{}) ValidationError {
+func ValidateBody(body io.Reader, validate *validator.Validate, params interface{}) ValidationError {
 	if err := json.NewDecoder(body).Decode(params); err != nil {
 		return ValidationError{
 			"body": []string{"invalid request body"},
 		}
 	}
+	var errs []string
+	if err := validate.Struct(params); err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			errs = append(errs, fmt.Sprintf("%s should be %s", err.Field(), err.Tag()))
+		}
+	}
+	if len(errs) > 0 {
+		return ValidationError{"body": errs}
+	}
+	return nil
+}
+
+func ValidateStruct(validate *validator.Validate, params interface{}) ValidationError {
 	var errs []string
 	if err := validate.Struct(params); err != nil {
 		for _, err := range err.(validator.ValidationErrors) {

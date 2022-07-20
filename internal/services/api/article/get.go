@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/iyorozuya/real-world-app/internal/sqlc"
 	"github.com/iyorozuya/real-world-app/internal/types"
+	"strings"
 )
 
 type GetArticleResponse struct {
@@ -26,7 +27,7 @@ func (s ArticleServiceImpl) Get(params types.GetArticleParams) (*GetArticleRespo
 			Title:          article.Title,
 			Description:    article.Description,
 			Body:           article.Body,
-			TagList:        nil,
+			TagList:        parseArticleTags(article.Tags),
 			Favorited:      article.Favorited,
 			FavoritesCount: int(article.FavoritesCount),
 			CreatedAt:      article.CreatedAt.Time.String(),
@@ -39,4 +40,11 @@ func (s ArticleServiceImpl) Get(params types.GetArticleParams) (*GetArticleRespo
 			},
 		},
 	}, nil
+}
+
+func parseArticleTags(tags string) []string {
+	if tags == "" {
+		return []string{}
+	}
+	return strings.Split(tags, ",")
 }

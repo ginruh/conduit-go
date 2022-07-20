@@ -10,6 +10,7 @@ SELECT
     CASE WHEN uf.following IS null THEN FALSE ELSE TRUE END AS user_following,
     CASE WHEN af.favorites IS null THEN 0 ELSE CAST(af.favorites AS INTEGER) END AS favorites_count,
     CASE WHEN af_favorited.favorited IS null THEN FALSE ELSE TRUE END as favorited,
+    CASE WHEN at.tags IS NULL THEN '' ELSE CAST(at.tags AS VARCHAR) END AS tags,
     a.created_at,
     a.updated_at
 FROM article AS a
@@ -23,6 +24,9 @@ FROM article AS a
     LEFT JOIN
         (SELECT af.article_id, af.user_id, COUNT(*) as favorited FROM article_favorite as af GROUP BY af.article_id, af.user_id) as af_favorited
     ON a.id = af_favorited.article_id AND af_favorited.user_id = $2
+    LEFT JOIN
+        (SELECT at.article_id, STRING_AGG(at.tag_name, ',') AS tags FROM article_tags AS at GROUP BY at.article_id) as at
+    ON a.id = at.article_id AND at.article_id = a.id
 WHERE a.slug = $1;
 
 -- name: CreateArticle :one

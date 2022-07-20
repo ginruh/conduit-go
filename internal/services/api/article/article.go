@@ -1,5 +1,7 @@
 package article
 
+import "github.com/iyorozuya/real-world-app/internal/sqlc"
+
 type ArticleService interface {
 	List()
 	Feed()
@@ -10,4 +12,12 @@ type ArticleService interface {
 	Favorite()
 	Unfavorite()
 	ListTags()
+}
+
+type ArticleServiceImpl struct {
+	q *sqlc.Queries
+}
+
+func NewArticleService(q *sqlc.Queries) ArticleServiceImpl {
+	return ArticleServiceImpl{q}
 }

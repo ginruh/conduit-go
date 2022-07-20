@@ -30,7 +30,7 @@ func (c ArticleController) Feed(w http.ResponseWriter, r *http.Request) {
 
 // Get Article godoc
 func (c ArticleController) Get(w http.ResponseWriter, r *http.Request) {
-
+	c.articleService.Get()
 }
 
 // Create Article godoc

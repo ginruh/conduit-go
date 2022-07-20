@@ -1,17 +1,20 @@
 package article
 
-import "github.com/iyorozuya/real-world-app/internal/sqlc"
+import (
+	"github.com/iyorozuya/real-world-app/internal/sqlc"
+	"github.com/iyorozuya/real-world-app/internal/types"
+)
 
 type ArticleService interface {
-	List()
-	Feed()
-	Get(id string)
-	Create()
-	Update()
-	Delete()
-	Favorite()
-	Unfavorite()
-	ListTags()
+	Get(params types.GetArticleParams) (GetArticleResponse, error)
+	// List()
+	// Feed()
+	// Create()
+	// Update()
+	// Delete()
+	// Favorite()
+	// Unfavorite()
+	// ListTags()
 }
 
 type ArticleServiceImpl struct {

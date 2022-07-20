@@ -9,5 +9,5 @@ CREATE TABLE "article_tags" (
 );
 -- +goose StatementEnd
 
--- +goose.Down
-DROP TABLE article_tags;
+-- +goose Down
+DROP TABLE IF EXISTS article_tags;

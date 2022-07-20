@@ -11,5 +11,10 @@ CREATE TABLE "article" (
 );
 -- +goose StatementEnd
 
+-- +goose StatementBegin
+ALTER TABLE "article"
+ADD author_id INT NOT NULL REFERENCES "user" (id);
+-- +goose StatementEnd
+
 -- +goose Down
 DROP TABLE "article";

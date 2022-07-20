@@ -31,3 +31,8 @@ type UnfollowUserParams struct {
 	Username    string `json:"username" type:"string" validate:"required,alphanum"`
 	CurrentUser int    `validate:"omitempty"`
 }
+
+type GetArticleParams struct {
+	Slug        string `json:"slug" type:"string" validate:"required,lowercase"`
+	CurrentUser int    `validate:"omitempty"`
+}

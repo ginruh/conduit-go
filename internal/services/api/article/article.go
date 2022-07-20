@@ -6,7 +6,7 @@ import (
 )
 
 type ArticleService interface {
-	Get(params types.GetArticleParams) (GetArticleResponse, error)
+	Get(params types.GetArticleParams) (*GetArticleResponse, error)
 	// List()
 	// Feed()
 	// Create()

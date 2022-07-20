@@ -8,6 +8,40 @@ import (
 	"database/sql"
 )
 
+type Article struct {
+	ID          int32
+	Slug        string
+	Title       string
+	Description string
+	Body        string
+	CreatedAt   sql.NullTime
+	UpdatedAt   sql.NullTime
+	AuthorID    int32
+}
+
+type ArticleComment struct {
+	ID        int32
+	ArticleID int32
+	UserID    int32
+	Body      string
+	CreatedAt sql.NullTime
+	UpdatedAt sql.NullTime
+}
+
+type ArticleFavorite struct {
+	ArticleID int32
+	UserID    int32
+	CreatedAt sql.NullTime
+	UpdatedAt sql.NullTime
+}
+
+type ArticleTag struct {
+	ArticleID int32
+	TagName   string
+	CreatedAt sql.NullTime
+	UpdatedAt sql.NullTime
+}
+
 type User struct {
 	ID        int32
 	Username  string

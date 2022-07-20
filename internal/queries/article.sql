@@ -5,9 +5,11 @@ SELECT
     a.description,
     a.body,
     u.username,
-    uf.following as user_following,
-    af.favorites as favorites_count,
-    af_favorited.favorited as favorited,
+    u.bio,
+    u.image,
+    CASE WHEN uf.following IS null THEN FALSE ELSE TRUE END AS user_following,
+    CASE WHEN af.favorites IS null THEN 0 ELSE CAST(af.favorites AS INTEGER) END AS favorites_count,
+    CASE WHEN af_favorited.favorited IS null THEN FALSE ELSE TRUE END as favorited,
     a.created_at,
     a.updated_at
 FROM article AS a
@@ -21,8 +23,7 @@ FROM article AS a
     LEFT JOIN
         (SELECT af.article_id, af.user_id, COUNT(*) as favorited FROM article_favorite as af GROUP BY af.article_id, af.user_id) as af_favorited
     ON a.id = af_favorited.article_id AND af_favorited.user_id = $2
-WHERE a.id = $1;
-
+WHERE a.slug = $1;
 
 -- name: CreateArticle :one
 INSERT INTO "article" (slug, title, description, body, author_id)

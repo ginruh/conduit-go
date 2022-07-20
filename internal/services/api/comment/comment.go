@@ -3,9 +3,9 @@ package comment
 import "github.com/iyorozuya/real-world-app/internal/sqlc"
 
 type CommentService interface {
-	List()
-	Create()
-	Delete()
+	// List()
+	// Create()
+	// Delete()
 }
 
 type CommentServiceImpl struct {

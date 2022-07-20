@@ -3,7 +3,7 @@ package tag
 import "github.com/iyorozuya/real-world-app/internal/sqlc"
 
 type TagService interface {
-	List()
+	// List()
 }
 
 type TagServiceImpl struct {

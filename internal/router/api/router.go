@@ -32,9 +32,6 @@ func Bootstrap(r chi.Router, database *sql.DB) {
 		r.Post("/users/login", authController.Login)
 		r.Post("/users", authController.Register)
 
-		// articles
-		r.Get("/articles/{slug}", articleController.Get)
-
 		// tags
 		r.Get("/tags", tagController.List)
 	})
@@ -73,6 +70,7 @@ func Bootstrap(r chi.Router, database *sql.DB) {
 
 		// articles
 		r.Get("/articles", articleController.List)
+		r.Get("/articles/{slug}", articleController.Get)
 
 		// comments
 		r.Get("/articles/{slug}/comments", commentController.List)

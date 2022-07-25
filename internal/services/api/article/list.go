@@ -8,5 +8,5 @@ type ListArticlesResponse struct {
 }
 
 func (s ArticleServiceImpl) List(params types.ListArticlesParams) (*ListArticlesResponse, error) {
-
+	return nil, nil
 }

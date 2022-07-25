@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type Database interface {
@@ -30,10 +30,13 @@ func New(username, password, host, port, dbName string) db {
 
 func (d db) Connect() (*sql.DB, error) {
 	db, err := sql.Open(
-		"postgres",
-		fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable", d.username, d.password, d.host, d.port, d.dbName),
+		"mysql",
+		fmt.Sprintf("%v:%v@tcp(%v:%v)/%v", d.username, d.password, d.host, d.port, d.dbName),
 	)
 	if err != nil {
+		return nil, err
+	}
+	if err = db.Ping(); err != nil {
 		return nil, err
 	}
 	return db, nil

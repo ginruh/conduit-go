@@ -9,6 +9,6 @@
     <file url="file://$PROJECT_DIR$/internal/queries/article.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/internal/queries/user.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/internal/queries/user_follower.sql" dialect="PostgreSQL" />
-    <file url="PROJECT" dialect="PostgreSQL" />
+    <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>

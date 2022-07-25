@@ -23,7 +23,7 @@ dev-stop:
 	./scripts/dev.sh down
 
 migrate-up:
-	goose -dir internal/migrations postgres "postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable" up
+	goose -dir internal/migrations mysql "${DB_USERNAME}:${DB_PASSWORD}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" up
 
 migrate-down:
-	goose -dir internal/migrations postgres "postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable" down
+	goose -dir internal/migrations mysql "${DB_USERNAME}:${DB_PASSWORD}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" down

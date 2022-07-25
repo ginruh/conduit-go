@@ -23,7 +23,24 @@ func NewArticleController(articleService article.ArticleService, validate *valid
 
 // List articles godoc
 func (c ArticleController) List(w http.ResponseWriter, r *http.Request) {
-
+	listArticleParams := types.ListArticlesParams{
+		Tag:         r.URL.Query().Get("tag"),
+		Author:      r.URL.Query().Get("author"),
+		Favorited:   r.URL.Query().Get("favorited"),
+		Limit:       r.URL.Query().Get("limit"),
+		Offset:      r.URL.Query().Get("offset"),
+		CurrentUser: r.Context().Value("userId").(int),
+	}
+	if validationErr := utils.ValidateStruct(c.validate, listArticleParams); validationErr != nil {
+		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
+		return
+	}
+	articles, err := c.articleService.List(listArticleParams)
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.SendResponse(w, http.StatusOK, articles)
 }
 
 // Feed (Feed for followed users) godoc

@@ -36,3 +36,12 @@ type GetArticleParams struct {
 	Slug        string `json:"slug" type:"string" validate:"required,lowercase"`
 	CurrentUser int    `validate:"omitempty"`
 }
+
+type ListArticlesParams struct {
+	Tag         string `type:"string" validate:"omitempty,alpha,lowercase"`
+	Author      string `type:"string" validate:"omitempty,alphanum"`
+	Favorited   string `type:"string" validate:"omitempty,alphanum"`
+	Limit       string `validate:"omitempty,number"`
+	Offset      string `validate:"omitempty,number"`
+	CurrentUser int    `validate:"omitempty"`
+}

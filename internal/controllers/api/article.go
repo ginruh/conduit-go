@@ -24,12 +24,27 @@ func NewArticleController(articleService article.ArticleService, validate *valid
 
 // List articles godoc
 func (c ArticleController) List(w http.ResponseWriter, r *http.Request) {
+	articleTags := r.URL.Query().Get("tag")
+	articleAuthor := r.URL.Query().Get("author")
+	articleFavorited := r.URL.Query().Get("favorited")
+	articleLimit := r.URL.Query().Get("limit")
+	articleOffset := r.URL.Query().Get("offset")
 	listArticleParams := types.ListArticlesParams{
-		Tag:         r.URL.Query().Get("tag"),
-		Author:      r.URL.Query().Get("author"),
-		Favorited:   r.URL.Query().Get("favorited"),
-		Limit:       r.URL.Query().Get("limit"),
-		Offset:      r.URL.Query().Get("offset"),
+		Tag: sql.NullString{
+			String: articleTags, Valid: articleTags != "",
+		},
+		Author: sql.NullString{
+			String: articleAuthor, Valid: articleAuthor != "",
+		},
+		Favorited: sql.NullString{
+			String: articleFavorited, Valid: articleFavorited != "",
+		},
+		Limit: sql.NullString{
+			String: articleLimit, Valid: articleLimit != "",
+		},
+		Offset: sql.NullString{
+			String: articleOffset, Valid: articleOffset != "",
+		},
 		CurrentUser: r.Context().Value("userId").(sql.NullString),
 	}
 	if validationErr := utils.ValidateStruct(c.validate, listArticleParams); validationErr != nil {

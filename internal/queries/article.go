@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/google/uuid"
 	"github.com/iyorozuya/real-world-app/internal/models"
+	"log"
 )
 
 type GetArticleParams struct {
@@ -66,7 +67,7 @@ func (q Queries) GetArticle(params GetArticleParams) (models.ArticleDetails, err
 }
 
 type ListArticlesParams struct {
-	CurrentUser    string
+	CurrentUser    sql.NullString
 	FavoritedUsers sql.NullString
 	ArticleTags    sql.NullString
 	AuthorUsername sql.NullString
@@ -80,7 +81,6 @@ func (q Queries) ListArticles(params ListArticlesParams) ([]models.ArticleDetail
 	rows, err := q.db.NamedQuery(
 		`
 			SELECT
-			    DISTINCT
 			    a.id,
 			    a.slug,
 			    a.title,
@@ -89,6 +89,7 @@ func (q Queries) ListArticles(params ListArticlesParams) ([]models.ArticleDetail
 			    u.username,
 			    u.bio,
 			    u.image,
+		    	IF(uf.following IS null, FALSE, TRUE) AS user_following,
 			    IF(af.favorites IS null, 0, CONVERT(af.favorites, UNSIGNED)) AS favorites_count,
 			    IF(af_favorited.favorited IS null, FALSE, TRUE) as favorited,
 			    IF(at.tags IS NULL, '', CONVERT(at.tags, CHAR)) AS tags,
@@ -126,15 +127,17 @@ func (q Queries) ListArticles(params ListArticlesParams) ([]models.ArticleDetail
 			     ) as af_list
 			     ON
 			        a.id = af_list.article_id AND
-			        IF (:favorited_users is NULL, FALSE, FIND_IN_SET(af_list.username, :favorited_users)) -- favorited user list
+			        IF (:favorited_users is NULL, FALSE, FIND_IN_SET(af_list.username, :favorited_users))
 			     LEFT JOIN
 			     (
 			         SELECT at.article_id, GROUP_CONCAT(DISTINCT at.tag_name SEPARATOR ',') AS tags FROM article_tags AS at
-			         WHERE IF (:article_tags IS NULL, TRUE, FIND_IN_SET(at.tag_name, :article_tags)) -- article tags
+			         WHERE IF (:article_tags IS NULL, TRUE, FIND_IN_SET(at.tag_name, :article_tags))
 			         GROUP BY at.article_id
 			     ) AS at
 			    ON a.id = at.article_id AND at.article_id = a.id
-			WHERE IF (:author_usernames IS NULL, TRUE, FIND_IN_SET(u.username, :author_usernames)) AND at.tags is not null -- author username
+			WHERE 
+			    IF (:author_usernames IS NULL, TRUE, FIND_IN_SET(u.username, :author_usernames)) AND 
+			    at.tags is not null
 			ORDER BY a.created_at DESC
 			LIMIT :limit
 			OFFSET :offset;
@@ -155,6 +158,7 @@ func (q Queries) ListArticles(params ListArticlesParams) ([]models.ArticleDetail
 	for rows.Next() {
 		var articleDetails models.ArticleDetails
 		if err = rows.StructScan(&articleDetails); err != nil {
+			log.Println(err)
 			break
 		}
 		articlesList = append(articlesList, articleDetails)

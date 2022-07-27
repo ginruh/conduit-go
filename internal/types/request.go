@@ -40,11 +40,11 @@ type GetArticleParams struct {
 }
 
 type ListArticlesParams struct {
-	Tag         string         `type:"string" validate:"omitempty,alpha,lowercase"`
-	Author      string         `type:"string" validate:"omitempty,alphanum"`
-	Favorited   string         `type:"string" validate:"omitempty,alphanum"`
-	Limit       string         `validate:"omitempty,number"`
-	Offset      string         `validate:"omitempty,number"`
+	Tag         sql.NullString `type:"string" validate:"omitempty,alpha,lowercase"`
+	Author      sql.NullString `type:"string" validate:"omitempty,alphanum"`
+	Favorited   sql.NullString `type:"string" validate:"omitempty,alphanum"`
+	Limit       sql.NullString `validate:"omitempty,number"`
+	Offset      sql.NullString `validate:"omitempty,number"`
 	CurrentUser sql.NullString `validate:"omitempty"`
 }
 

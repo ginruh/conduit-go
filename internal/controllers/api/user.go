@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	"github.com/iyorozuya/real-world-app/internal/services/api/user"
@@ -49,7 +50,7 @@ func (c UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 func (c UserController) GetProfile(w http.ResponseWriter, r *http.Request) {
 	getProfileParams := types.GetProfileParams{
 		Username:          chi.URLParam(r, "username"),
-		AuthenticatedUser: r.Context().Value("userId").(string),
+		AuthenticatedUser: r.Context().Value("userId").(sql.NullString),
 	}
 	if validationErr := utils.ValidateStruct(c.validate, &getProfileParams); validationErr != nil {
 		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)

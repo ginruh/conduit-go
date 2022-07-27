@@ -17,6 +17,7 @@ func (q Queries) GetArticle(params GetArticleParams) (models.ArticleDetails, err
 	rows, err := q.db.NamedQuery(
 		`
 		SELECT
+		    a.id,
 		    a.slug,
 		    a.title,
 		    a.description,
@@ -31,7 +32,7 @@ func (q Queries) GetArticle(params GetArticleParams) (models.ArticleDetails, err
 		    a.created_at,
 		    a.updated_at
 		FROM article AS a
-		    LEFT JOIN "user" AS u ON a.author_id = u.id
+		    LEFT JOIN user AS u ON a.author_id = u.id
 		    LEFT JOIN
 		        (SELECT uf.user_id, uf.follower_id, count(*) as following FROM user_follower as uf GROUP BY uf.user_id, uf.follower_id) as uf
 		    ON uf.follower_id = a.author_id AND uf.user_id = :current_user_id
@@ -42,7 +43,7 @@ func (q Queries) GetArticle(params GetArticleParams) (models.ArticleDetails, err
 		        (SELECT af.article_id, af.user_id, COUNT(*) as favorited FROM article_favorite as af GROUP BY af.article_id, af.user_id) as af_favorited
 		    ON a.id = af_favorited.article_id AND af_favorited.user_id = :current_user_id
 		    LEFT JOIN
-		        (SELECT at.article_id, GROUP_CONCAT(at.tag_name, ',') AS tags FROM article_tags AS at GROUP BY at.article_id) as at
+		        (SELECT at.article_id, GROUP_CONCAT(DISTINCT at.tag_name SEPARATOR ',') AS tags FROM article_tags AS at GROUP BY at.article_id) as at
 		    ON a.id = at.article_id AND at.article_id = a.id
 		WHERE a.slug = :article_slug
 		LIMIT 1
@@ -94,7 +95,7 @@ func (q Queries) ListArticles(params ListArticlesParams) ([]models.ArticleDetail
 			    a.created_at,
 			    a.updated_at
 			FROM article AS a
-			     LEFT JOIN "user" AS u ON a.author_id = u.id
+			     LEFT JOIN user AS u ON a.author_id = u.id
 			     LEFT JOIN
 			        (
 			            SELECT uf.user_id, uf.follower_id, count(*) as following
@@ -120,7 +121,7 @@ func (q Queries) ListArticles(params ListArticlesParams) ([]models.ArticleDetail
 			     (
 			         SELECT af.article_id, af.user_id, u2.username
 			         FROM article_favorite as af
-			         LEFT JOIN "user" as u2 on u2.id = af.user_id
+			         LEFT JOIN user as u2 on u2.id = af.user_id
 			         GROUP BY af.article_id, af.user_id, u2.username
 			     ) as af_list
 			     ON
@@ -176,7 +177,7 @@ func (q Queries) CreateArticle(params CreateArticleParams) (models.ArticleDetail
 	articleId := uuid.New()
 	_, err := q.db.NamedExec(
 		`
-			INSERT INTO "article" (id, slug, title, description, body, author_id)
+			INSERT INTO article (id, slug, title, description, body, author_id)
 			VALUES (:article_id, :article_slug, :article_title, :article_description, :article_body, :author_id)
 		`,
 		map[string]interface{}{

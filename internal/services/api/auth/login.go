@@ -51,9 +51,9 @@ func GenerateUserToken(userID string) (string, error) {
 	return tokenString, nil
 }
 
-func VerifyUserToken(tokenString string) (int, error) {
+func VerifyUserToken(tokenString string) (string, error) {
 	type tokenClaims struct {
-		ID int `json:"id"`
+		ID string `json:"id"`
 		jwt.RegisteredClaims
 	}
 	token, err := jwt.ParseWithClaims(tokenString, &tokenClaims{}, func(t *jwt.Token) (interface{}, error) {
@@ -63,5 +63,5 @@ func VerifyUserToken(tokenString string) (int, error) {
 	if claims, ok := token.Claims.(*tokenClaims); ok && token.Valid {
 		return claims.ID, nil
 	}
-	return 0, err
+	return "", err
 }

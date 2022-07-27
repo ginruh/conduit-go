@@ -28,7 +28,10 @@ func OptionalJWT(next http.Handler) http.Handler {
 		if err != nil {
 			ctx = context.WithValue(r.Context(), "userId", sql.NullString{})
 		} else {
-			ctx = context.WithValue(r.Context(), "userId", userId)
+			ctx = context.WithValue(r.Context(), "userId", sql.NullString{
+				String: userId,
+				Valid:  true,
+			})
 		}
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

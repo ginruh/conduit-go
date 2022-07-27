@@ -6,17 +6,17 @@ import (
 	"strings"
 )
 
-func ParseAuthorizationHeader(tokenHeader string) (int, error) {
+func ParseAuthorizationHeader(tokenHeader string) (string, error) {
 	tokenHeaderArr := strings.Split(tokenHeader, " ")
 	if len(tokenHeaderArr) < 2 {
-		return 0, errors.New("access forbidden")
+		return "", errors.New("access forbidden")
 	}
 	if tokenHeaderArr[0] != "Token" {
-		return 0, errors.New("access forbidden")
+		return "", errors.New("access forbidden")
 	}
 	userId, err := auth.VerifyUserToken(tokenHeaderArr[1])
 	if err != nil {
-		return 0, errors.New("access forbidden")
+		return "", errors.New("access forbidden")
 	}
 	return userId, nil
 }

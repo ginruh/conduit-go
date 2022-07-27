@@ -9,7 +9,7 @@ type ArticleService interface {
 	Get(params types.GetArticleParams) (*GetArticleResponse, error)
 	List(params types.ListArticlesParams) (*ListArticlesResponse, error)
 	// Feed()
-	// Create()
+	Create(params types.CreateArticleParams) (*CreateArticleResponse, error)
 	// Update()
 	// Delete()
 	// Favorite()

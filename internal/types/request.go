@@ -20,8 +20,8 @@ type UpdateUserParams struct {
 }
 
 type GetProfileParams struct {
-	Username          string `json:"username" type:"string" validate:"required,alphanum"`
-	AuthenticatedUser string `validate:"omitempty"`
+	Username          string         `json:"username" type:"string" validate:"required,alphanum"`
+	AuthenticatedUser sql.NullString `validate:"omitempty"`
 }
 
 type FollowUserParams struct {
@@ -46,4 +46,16 @@ type ListArticlesParams struct {
 	Limit       string         `validate:"omitempty,number"`
 	Offset      string         `validate:"omitempty,number"`
 	CurrentUser sql.NullString `validate:"omitempty"`
+}
+
+type CreateArticleParams struct {
+	Article     CreateArticleStructParams `json:"article"`
+	CurrentUser string                    `validate:"omitempty"`
+}
+
+type CreateArticleStructParams struct {
+	Title       string   `json:"title" validate:"required,min=8,max=50"`
+	Description string   `json:"description" validate:"required,min=8,max=255"`
+	Body        string   `json:"body" validate:"required,min=8"`
+	TagList     []string `json:"tagList" validate:"required"`
 }

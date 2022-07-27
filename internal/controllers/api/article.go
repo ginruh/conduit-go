@@ -69,7 +69,19 @@ func (c ArticleController) Get(w http.ResponseWriter, r *http.Request) {
 
 // Create Article godoc
 func (c ArticleController) Create(w http.ResponseWriter, r *http.Request) {
-
+	var createArticleParams types.CreateArticleParams
+	if validationErr := utils.ValidateBody(r.Body, c.validate, &createArticleParams); validationErr != nil {
+		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
+		return
+	}
+	userId := r.Context().Value("userId").(string)
+	createArticleParams.CurrentUser = userId
+	article, err := c.articleService.Create(createArticleParams)
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.SendResponse(w, http.StatusOK, article)
 }
 
 // Update Article godoc

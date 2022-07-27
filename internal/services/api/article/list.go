@@ -5,7 +5,6 @@ import (
 	"github.com/iyorozuya/real-world-app/internal/queries"
 	"github.com/iyorozuya/real-world-app/internal/types"
 	"strconv"
-	"strings"
 )
 
 type ListArticlesResponse struct {
@@ -38,7 +37,7 @@ func (s ArticleServiceImpl) List(params types.ListArticlesParams) (*ListArticles
 			Title:          article.Title,
 			Description:    article.Description,
 			Body:           article.Body,
-			TagList:        strings.Split(article.Tags, ","),
+			TagList:        parseArticleTags(article.Tags),
 			Favorited:      article.Favorited,
 			FavoritesCount: article.FavoritesCount,
 			CreatedAt:      article.CreatedAt.String(),

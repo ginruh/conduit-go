@@ -46,7 +46,7 @@ func (s ArticleServiceImpl) Create(params types.CreateArticleParams) (*CreateArt
 			Title:          article.Title,
 			Description:    article.Description,
 			Body:           article.Body,
-			TagList:        strings.Split(article.Tags, ","),
+			TagList:        parseArticleTags(article.Tags),
 			Favorited:      article.Favorited,
 			FavoritesCount: article.FavoritesCount,
 			CreatedAt:      article.CreatedAt.String(),

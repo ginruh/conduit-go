@@ -1,6 +1,7 @@
 package article
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/iyorozuya/real-world-app/internal/queries"
@@ -41,9 +42,9 @@ func (s ArticleServiceImpl) Get(params types.GetArticleParams) (*GetArticleRespo
 	}, nil
 }
 
-func parseArticleTags(tags string) []string {
-	if tags == "" {
+func parseArticleTags(tags sql.NullString) []string {
+	if tags.Valid == false {
 		return []string{}
 	}
-	return strings.Split(tags, ",")
+	return strings.Split(tags.String, ",")
 }

@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"github.com/google/uuid"
 	"github.com/iyorozuya/real-world-app/internal/models"
-	"log"
 )
 
 type GetArticleParams struct {
@@ -29,7 +28,7 @@ func (q Queries) GetArticle(params GetArticleParams) (models.ArticleDetails, err
 		    IF(uf.following IS null, FALSE, TRUE) AS user_following,
 		    IF(af.favorites IS null, 0, CONVERT(af.favorites, UNSIGNED)) AS favorites_count,
 		    IF(af_favorited.favorited IS null, FALSE, TRUE) as favorited,
-		    IF(at.tags IS NULL, '', CONVERT(at.tags, CHAR)) AS tags,
+		    IF(at.tags IS NULL, NULL, CONVERT(at.tags, CHAR)) AS tags,
 		    a.created_at,
 		    a.updated_at
 		FROM article AS a
@@ -92,7 +91,7 @@ func (q Queries) ListArticles(params ListArticlesParams) ([]models.ArticleDetail
 		    	IF(uf.following IS null, FALSE, TRUE) AS user_following,
 			    IF(af.favorites IS null, 0, CONVERT(af.favorites, UNSIGNED)) AS favorites_count,
 			    IF(af_favorited.favorited IS null, FALSE, TRUE) as favorited,
-			    IF(at.tags IS NULL, '', CONVERT(at.tags, CHAR)) AS tags,
+			    IF(at.tags IS NULL, NULL, CONVERT(at.tags, CHAR)) AS tags,
 			    a.created_at,
 			    a.updated_at
 			FROM article AS a
@@ -135,9 +134,7 @@ func (q Queries) ListArticles(params ListArticlesParams) ([]models.ArticleDetail
 			         GROUP BY at.article_id
 			     ) AS at
 			    ON a.id = at.article_id AND at.article_id = a.id
-			WHERE 
-			    IF (:author_usernames IS NULL, TRUE, FIND_IN_SET(u.username, :author_usernames)) AND 
-			    at.tags is not null
+			WHERE IF (:author_usernames IS NULL, TRUE, FIND_IN_SET(u.username, :author_usernames))
 			ORDER BY a.created_at DESC
 			LIMIT :limit
 			OFFSET :offset;
@@ -158,7 +155,6 @@ func (q Queries) ListArticles(params ListArticlesParams) ([]models.ArticleDetail
 	for rows.Next() {
 		var articleDetails models.ArticleDetails
 		if err = rows.StructScan(&articleDetails); err != nil {
-			log.Println(err)
 			break
 		}
 		articlesList = append(articlesList, articleDetails)

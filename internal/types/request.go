@@ -57,5 +57,5 @@ type CreateArticleStructParams struct {
 	Title       string   `json:"title" validate:"required,min=8,max=50"`
 	Description string   `json:"description" validate:"required,min=8,max=255"`
 	Body        string   `json:"body" validate:"required,min=8"`
-	TagList     []string `json:"tagList" validate:"required"`
+	TagList     []string `json:"tagList" validate:"omitempty"`
 }

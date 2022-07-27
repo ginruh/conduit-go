@@ -17,7 +17,7 @@ type ArticleDetails struct {
 	UserFollowing  bool           `db:"user_following"`
 	FavoritesCount int            `db:"favorites_count"`
 	Favorited      bool           `db:"favorited"`
-	Tags           string         `db:"tags"`
+	Tags           sql.NullString `db:"tags"`
 	CreatedAt      time.Time      `db:"created_at"`
 	UpdatedAt      time.Time      `db:"updated_at"`
 }

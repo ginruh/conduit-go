@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 CREATE TABLE article_comment (
     id VARCHAR(36) PRIMARY KEY,
-    article_id VARCHAR(36) NOT NULL REFERENCES article (id),
+    article_id VARCHAR(36) NOT NULL REFERENCES article (id) ON DELETE CASCADE,
     user_id VARCHAR(36) NOT NULL REFERENCES user (id),
     body TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

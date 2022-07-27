@@ -1,10 +1,9 @@
 package seeders
 
 import (
-	"context"
 	"fmt"
 	"github.com/bxcodec/faker/v3"
-	"github.com/iyorozuya/real-world-app/internal/sqlc"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"os"
@@ -31,7 +30,7 @@ func (s Seed) seedUsers() {
 	fmt.Printf("Email: %s, Password: %s", user.Email, user.Password)
 	fmt.Println()
 
-	_, err = s.q.CreateUser(context.Background(), sqlc.CreateUserParams{
+	_, err = s.q.CreateUser(queries.CreateUserParams{
 		Username: user.Username,
 		Email:    user.Email,
 		Password: string(passwordHash),

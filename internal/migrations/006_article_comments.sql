@@ -11,4 +11,4 @@ CREATE TABLE article_comment (
 -- +goose StatementEnd
 
 -- +goose Down
-DROP TABLE "article_comment";
+DROP TABLE article_comment;

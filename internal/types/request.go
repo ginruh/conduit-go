@@ -1,5 +1,7 @@
 package types
 
+import "database/sql"
+
 type RegisterParams struct {
 	Username string `json:"username" type:"string" validate:"required"`
 	Email    string `json:"email" type:"string" validate:"required,email"`
@@ -19,29 +21,29 @@ type UpdateUserParams struct {
 
 type GetProfileParams struct {
 	Username          string `json:"username" type:"string" validate:"required,alphanum"`
-	AuthenticatedUser int    `validate:"omitempty"`
+	AuthenticatedUser string `validate:"omitempty"`
 }
 
 type FollowUserParams struct {
 	Username    string `json:"username" type:"string" validate:"required,alphanum"`
-	CurrentUser int    `validate:"omitempty"`
+	CurrentUser string `validate:"omitempty"`
 }
 
 type UnfollowUserParams struct {
 	Username    string `json:"username" type:"string" validate:"required,alphanum"`
-	CurrentUser int    `validate:"omitempty"`
+	CurrentUser string `validate:"omitempty"`
 }
 
 type GetArticleParams struct {
-	Slug        string `json:"slug" type:"string" validate:"required,lowercase"`
-	CurrentUser int    `validate:"omitempty"`
+	Slug        string         `json:"slug" type:"string" validate:"required,lowercase"`
+	CurrentUser sql.NullString `validate:"omitempty"`
 }
 
 type ListArticlesParams struct {
-	Tag         string `type:"string" validate:"omitempty,alpha,lowercase"`
-	Author      string `type:"string" validate:"omitempty,alphanum"`
-	Favorited   string `type:"string" validate:"omitempty,alphanum"`
-	Limit       string `validate:"omitempty,number"`
-	Offset      string `validate:"omitempty,number"`
-	CurrentUser int    `validate:"omitempty"`
+	Tag         string         `type:"string" validate:"omitempty,alpha,lowercase"`
+	Author      string         `type:"string" validate:"omitempty,alphanum"`
+	Favorited   string         `type:"string" validate:"omitempty,alphanum"`
+	Limit       string         `validate:"omitempty,number"`
+	Offset      string         `validate:"omitempty,number"`
+	CurrentUser sql.NullString `validate:"omitempty"`
 }

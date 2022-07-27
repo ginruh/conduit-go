@@ -20,7 +20,7 @@ func NewUserController(userService user.UserService, validate *validator.Validat
 
 // GetCurrentUser godoc
 func (c UserController) GetCurrentUser(w http.ResponseWriter, r *http.Request) {
-	userId := r.Context().Value("userId").(int)
+	userId := r.Context().Value("userId").(string)
 	user, err := c.userService.Get(userId)
 	if err != nil {
 		utils.SendError(w, http.StatusInternalServerError, err.Error())
@@ -36,7 +36,7 @@ func (c UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
 		return
 	}
-	userId := r.Context().Value("userId").(int)
+	userId := r.Context().Value("userId").(string)
 	user, err := c.userService.Update(userId, updateUserParams)
 	if err != nil {
 		utils.SendError(w, http.StatusInternalServerError, err.Error())
@@ -49,7 +49,7 @@ func (c UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 func (c UserController) GetProfile(w http.ResponseWriter, r *http.Request) {
 	getProfileParams := types.GetProfileParams{
 		Username:          chi.URLParam(r, "username"),
-		AuthenticatedUser: r.Context().Value("userId").(int),
+		AuthenticatedUser: r.Context().Value("userId").(string),
 	}
 	if validationErr := utils.ValidateStruct(c.validate, &getProfileParams); validationErr != nil {
 		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
@@ -67,7 +67,7 @@ func (c UserController) GetProfile(w http.ResponseWriter, r *http.Request) {
 func (c UserController) FollowUser(w http.ResponseWriter, r *http.Request) {
 	followUserParams := types.FollowUserParams{
 		Username:    chi.URLParam(r, "username"),
-		CurrentUser: r.Context().Value("userId").(int),
+		CurrentUser: r.Context().Value("userId").(string),
 	}
 	if validationErr := utils.ValidateStruct(c.validate, &followUserParams); validationErr != nil {
 		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
@@ -85,7 +85,7 @@ func (c UserController) FollowUser(w http.ResponseWriter, r *http.Request) {
 func (c UserController) UnfollowUser(w http.ResponseWriter, r *http.Request) {
 	unfollowUserParams := types.UnfollowUserParams{
 		Username:    chi.URLParam(r, "username"),
-		CurrentUser: r.Context().Value("userId").(int),
+		CurrentUser: r.Context().Value("userId").(string),
 	}
 	if validationErr := utils.ValidateStruct(c.validate, &unfollowUserParams); validationErr != nil {
 		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)

@@ -1,9 +1,0 @@
-version: "1"
-project:
-    id: "conduit"
-packages:
-    - path: "internal/sqlc"
-      name: "sqlc"
-      engine: "postgresql"
-      schema: "internal/migrations/"
-      queries: "internal/queries/"

@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"context"
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 	"github.com/iyorozuya/real-world-app/internal/types"
 	"golang.org/x/crypto/bcrypt"
 	"os"
@@ -14,7 +14,9 @@ type LoginResponse struct {
 }
 
 func (service AuthServiceImpl) Login(params types.LoginParams) (*LoginResponse, error) {
-	user, err := service.q.GetUser(context.Background(), params.Email)
+	user, err := service.q.GetUserByEmail(queries.GetUserByEmailParams{
+		Email: params.Email,
+	})
 	if err != nil {
 		return nil, errors.New("invalid email or password")
 	}
@@ -22,7 +24,7 @@ func (service AuthServiceImpl) Login(params types.LoginParams) (*LoginResponse, 
 	if err != nil {
 		return nil, errors.New("invalid email or password")
 	}
-	token, err := GenerateUserToken(int(user.ID))
+	token, err := GenerateUserToken(user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +39,7 @@ func (service AuthServiceImpl) Login(params types.LoginParams) (*LoginResponse, 
 	}, nil
 }
 
-func GenerateUserToken(userID int) (string, error) {
+func GenerateUserToken(userID string) (string, error) {
 	jwtSecret := os.Getenv("JWT_SECRET")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id": userID,

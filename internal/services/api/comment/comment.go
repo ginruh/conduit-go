@@ -1,6 +1,8 @@
 package comment
 
-import "github.com/iyorozuya/real-world-app/internal/sqlc"
+import (
+	"github.com/iyorozuya/real-world-app/internal/queries"
+)
 
 type CommentService interface {
 	// List()
@@ -9,9 +11,9 @@ type CommentService interface {
 }
 
 type CommentServiceImpl struct {
-	q *sqlc.Queries
+	q *queries.Queries
 }
 
-func NewCommentService(q *sqlc.Queries) CommentServiceImpl {
+func NewCommentService(q *queries.Queries) CommentServiceImpl {
 	return CommentServiceImpl{q}
 }

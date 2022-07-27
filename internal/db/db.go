@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 )
 
 type Database interface {
@@ -28,8 +29,8 @@ func New(username, password, host, port, dbName string) db {
 	}
 }
 
-func (d db) Connect() (*sql.DB, error) {
-	db, err := sql.Open(
+func (d db) Connect() (*sqlx.DB, error) {
+	db, err := sqlx.Open(
 		"mysql",
 		fmt.Sprintf("%v:%v@tcp(%v:%v)/%v", d.username, d.password, d.host, d.port, d.dbName),
 	)

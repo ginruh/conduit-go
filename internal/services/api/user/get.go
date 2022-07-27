@@ -1,8 +1,8 @@
 package user
 
 import (
-	"context"
 	"errors"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 	"github.com/iyorozuya/real-world-app/internal/services/api/auth"
 	"github.com/iyorozuya/real-world-app/internal/types"
 )
@@ -11,8 +11,10 @@ type GetUserResponse struct {
 	User types.User `json:"user"`
 }
 
-func (s UserServiceImpl) Get(id int) (*GetUserResponse, error) {
-	user, err := s.q.GetUserByID(context.Background(), int32(id))
+func (s UserServiceImpl) Get(id string) (*GetUserResponse, error) {
+	user, err := s.q.GetUserById(queries.GetUserByIdParams{
+		ID: id,
+	})
 	if err != nil {
 		return nil, errors.New("user not found")
 	}

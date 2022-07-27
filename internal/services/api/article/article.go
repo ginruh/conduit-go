@@ -1,7 +1,7 @@
 package article
 
 import (
-	"github.com/iyorozuya/real-world-app/internal/sqlc"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 	"github.com/iyorozuya/real-world-app/internal/types"
 )
 
@@ -18,9 +18,9 @@ type ArticleService interface {
 }
 
 type ArticleServiceImpl struct {
-	q *sqlc.Queries
+	q *queries.Queries
 }
 
-func NewArticleService(q *sqlc.Queries) ArticleServiceImpl {
+func NewArticleService(q *queries.Queries) ArticleServiceImpl {
 	return ArticleServiceImpl{q}
 }

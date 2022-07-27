@@ -1,23 +1,23 @@
 package api
 
 import (
-	"database/sql"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	"github.com/iyorozuya/real-world-app/internal/controllers/api"
 	"github.com/iyorozuya/real-world-app/internal/middlewares"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 	"github.com/iyorozuya/real-world-app/internal/seeders"
 	"github.com/iyorozuya/real-world-app/internal/services/api/article"
 	"github.com/iyorozuya/real-world-app/internal/services/api/auth"
 	"github.com/iyorozuya/real-world-app/internal/services/api/comment"
 	"github.com/iyorozuya/real-world-app/internal/services/api/tag"
 	"github.com/iyorozuya/real-world-app/internal/services/api/user"
-	"github.com/iyorozuya/real-world-app/internal/sqlc"
+	"github.com/jmoiron/sqlx"
 	"os"
 )
 
-func Bootstrap(r chi.Router, database *sql.DB) {
-	q := sqlc.New(database)
+func Bootstrap(r chi.Router, database *sqlx.DB) {
+	q := queries.New(database)
 	validate := validator.New()
 
 	authController := api.NewAuthController(auth.NewAuthService(q), validate)

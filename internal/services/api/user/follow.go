@@ -1,10 +1,9 @@
 package user
 
 import (
-	"context"
 	"errors"
 	"fmt"
-	"github.com/iyorozuya/real-world-app/internal/sqlc"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 	"github.com/iyorozuya/real-world-app/internal/types"
 )
 
@@ -13,12 +12,14 @@ type FollowUserResponse struct {
 }
 
 func (s UserServiceImpl) Follow(params types.FollowUserParams) (*FollowUserResponse, error) {
-	followUser, err := s.q.GetUserByName(context.Background(), params.Username)
+	followUser, err := s.q.GetUserByName(queries.GetUserByNameParams{
+		Username: params.Username,
+	})
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("given profile %s not found", params.Username))
 	}
-	_ = s.q.FollowUser(context.Background(), sqlc.FollowUserParams{
-		UserID:     int32(params.CurrentUser),
+	_ = s.q.FollowUser(queries.FollowUserParams{
+		UserID:     params.CurrentUser,
 		FollowerID: followUser.ID,
 	})
 	return &FollowUserResponse{

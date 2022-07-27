@@ -1,9 +1,8 @@
 package auth
 
 import (
-	"context"
 	"errors"
-	"github.com/iyorozuya/real-world-app/internal/sqlc"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 	"github.com/iyorozuya/real-world-app/internal/types"
 	"golang.org/x/crypto/bcrypt"
 	"os"
@@ -20,7 +19,7 @@ func (service AuthServiceImpl) Register(params types.RegisterParams) (*RegisterU
 	if err != nil {
 		return nil, err
 	}
-	user, err := service.q.CreateUser(context.Background(), sqlc.CreateUserParams{
+	user, err := service.q.CreateUser(queries.CreateUserParams{
 		Email:    params.Email,
 		Username: params.Username,
 		Password: string(passwordHash),
@@ -28,7 +27,7 @@ func (service AuthServiceImpl) Register(params types.RegisterParams) (*RegisterU
 	if err != nil {
 		return nil, errors.New("user already exists")
 	}
-	token, err := GenerateUserToken(int(user.ID))
+	token, err := GenerateUserToken(user.ID)
 	if err != nil {
 		return nil, errors.New("internal server error")
 	}

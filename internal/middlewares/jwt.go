@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"context"
+	"database/sql"
 	"github.com/iyorozuya/real-world-app/internal/utils"
 	"net/http"
 )
@@ -25,7 +26,7 @@ func OptionalJWT(next http.Handler) http.Handler {
 		userId, err := utils.ParseAuthorizationHeader(tokenHeader)
 		var ctx context.Context
 		if err != nil {
-			ctx = context.WithValue(r.Context(), "userId", 0)
+			ctx = context.WithValue(r.Context(), "userId", sql.NullString{})
 		} else {
 			ctx = context.WithValue(r.Context(), "userId", userId)
 		}

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	"github.com/iyorozuya/real-world-app/internal/services/api/article"
@@ -29,7 +30,7 @@ func (c ArticleController) List(w http.ResponseWriter, r *http.Request) {
 		Favorited:   r.URL.Query().Get("favorited"),
 		Limit:       r.URL.Query().Get("limit"),
 		Offset:      r.URL.Query().Get("offset"),
-		CurrentUser: r.Context().Value("userId").(int),
+		CurrentUser: r.Context().Value("userId").(sql.NullString),
 	}
 	if validationErr := utils.ValidateStruct(c.validate, listArticleParams); validationErr != nil {
 		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
@@ -52,7 +53,7 @@ func (c ArticleController) Feed(w http.ResponseWriter, r *http.Request) {
 func (c ArticleController) Get(w http.ResponseWriter, r *http.Request) {
 	getArticleParams := types.GetArticleParams{
 		Slug:        chi.URLParam(r, "slug"),
-		CurrentUser: r.Context().Value("userId").(int),
+		CurrentUser: r.Context().Value("userId").(sql.NullString),
 	}
 	if validationErr := utils.ValidateStruct(c.validate, getArticleParams); validationErr != nil {
 		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)

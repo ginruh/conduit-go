@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/iyorozuya/real-world-app/internal/sqlc"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 	"github.com/iyorozuya/real-world-app/internal/types"
 )
 
@@ -11,9 +11,9 @@ type AuthService interface {
 }
 
 type AuthServiceImpl struct {
-	q *sqlc.Queries
+	q *queries.Queries
 }
 
-func NewAuthService(q *sqlc.Queries) AuthServiceImpl {
+func NewAuthService(q *queries.Queries) AuthServiceImpl {
 	return AuthServiceImpl{q}
 }

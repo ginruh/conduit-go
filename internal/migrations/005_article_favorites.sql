@@ -10,4 +10,4 @@ CREATE TABLE article_favorite (
 -- +goose StatementEnd
 
 -- +goose Down
-DROP TABLE "article_favorite";
+DROP TABLE article_favorite;

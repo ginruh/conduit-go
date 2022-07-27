@@ -1,10 +1,9 @@
 package article
 
 import (
-	"context"
 	"errors"
 	"fmt"
-	"github.com/iyorozuya/real-world-app/internal/sqlc"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 	"github.com/iyorozuya/real-world-app/internal/types"
 	"strings"
 )
@@ -14,9 +13,9 @@ type GetArticleResponse struct {
 }
 
 func (s ArticleServiceImpl) Get(params types.GetArticleParams) (*GetArticleResponse, error) {
-	article, err := s.q.GetArticle(context.Background(), sqlc.GetArticleParams{
-		Slug:   params.Slug,
-		UserID: int32(params.CurrentUser),
+	article, err := s.q.GetArticle(queries.GetArticleParams{
+		Slug:          params.Slug,
+		CurrentUserID: params.CurrentUser,
 	})
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("unable to find article %s", params.Slug))
@@ -30,12 +29,12 @@ func (s ArticleServiceImpl) Get(params types.GetArticleParams) (*GetArticleRespo
 			TagList:        parseArticleTags(article.Tags),
 			Favorited:      article.Favorited,
 			FavoritesCount: int(article.FavoritesCount),
-			CreatedAt:      article.CreatedAt.Time.String(),
-			UpdatedAt:      article.UpdatedAt.Time.String(),
+			CreatedAt:      article.CreatedAt.String(),
+			UpdatedAt:      article.UpdatedAt.String(),
 			Author: types.Author{
-				Username:  article.Username.String,
-				Bio:       article.Bio.String,
-				Image:     article.Image.String,
+				Username:  article.AuthorUsername,
+				Bio:       article.AuthorBio.String,
+				Image:     article.AuthorImage.String,
 				Following: article.UserFollowing,
 			},
 		},

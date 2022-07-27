@@ -1,14 +1,14 @@
 package seeders
 
 import (
-	"github.com/iyorozuya/real-world-app/internal/sqlc"
+	"github.com/iyorozuya/real-world-app/internal/queries"
 )
 
 type Seed struct {
-	q *sqlc.Queries
+	q *queries.Queries
 }
 
-func New(q *sqlc.Queries) Seed {
+func New(q *queries.Queries) Seed {
 	return Seed{q}
 }
 

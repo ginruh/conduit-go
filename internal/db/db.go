@@ -32,7 +32,7 @@ func New(username, password, host, port, dbName string) db {
 func (d db) Connect() (*sqlx.DB, error) {
 	db, err := sqlx.Open(
 		"mysql",
-		fmt.Sprintf("%v:%v@tcp(%v:%v)/%v", d.username, d.password, d.host, d.port, d.dbName),
+		fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=true", d.username, d.password, d.host, d.port, d.dbName),
 	)
 	if err != nil {
 		return nil, err

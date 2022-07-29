@@ -106,15 +106,51 @@ func (c ArticleController) Update(w http.ResponseWriter, r *http.Request) {
 
 // Delete Article godoc
 func (c ArticleController) Delete(w http.ResponseWriter, r *http.Request) {
-
+	var deleteArticleParams types.DeleteArticleParams
+	if validationErr := utils.ValidateBody(r.Body, c.validate, &deleteArticleParams); validationErr != nil {
+		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
+		return
+	}
+	res, err := c.articleService.Delete(deleteArticleParams)
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.SendResponse(w, http.StatusOK, res)
 }
 
 // Favorite Article godoc
 func (c ArticleController) Favorite(w http.ResponseWriter, r *http.Request) {
-
+	favoriteArticleParams := types.FavoriteArticleParams{
+		Slug:        r.URL.Query().Get("slug"),
+		CurrentUser: r.Context().Value("userId").(string),
+	}
+	if validationErr := utils.ValidateStruct(c.validate, favoriteArticleParams); validationErr != nil {
+		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
+		return
+	}
+	article, err := c.articleService.Favorite(favoriteArticleParams)
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.SendResponse(w, http.StatusOK, article)
 }
 
 // Unfavorite Article godoc
 func (c ArticleController) Unfavorite(w http.ResponseWriter, r *http.Request) {
-
+	unfavoriteArticleParams := types.UnfavoriteArticleParams{
+		Slug:        r.URL.Query().Get("slug"),
+		CurrentUser: r.Context().Value("userId").(string),
+	}
+	if validationErr := utils.ValidateStruct(c.validate, unfavoriteArticleParams); validationErr != nil {
+		utils.SendErrors(w, http.StatusUnprocessableEntity, validationErr)
+		return
+	}
+	article, err := c.articleService.Unfavorite(unfavoriteArticleParams)
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.SendResponse(w, http.StatusOK, article)
 }

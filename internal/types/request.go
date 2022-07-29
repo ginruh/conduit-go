@@ -59,3 +59,17 @@ type CreateArticleStructParams struct {
 	Body        string   `json:"body" validate:"required,min=8"`
 	TagList     []string `json:"tagList" validate:"omitempty"`
 }
+
+type DeleteArticleParams struct {
+	Slug string `json:"slug" validate:"required"`
+}
+
+type FavoriteArticleParams struct {
+	Slug        string `json:"slug" validate:"required"`
+	CurrentUser string `validate:"required"`
+}
+
+type UnfavoriteArticleParams struct {
+	Slug        string `json:"slug" validate:"required"`
+	CurrentUser string `validate:"required"`
+}

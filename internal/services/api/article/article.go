@@ -11,10 +11,9 @@ type ArticleService interface {
 	// Feed()
 	Create(params types.CreateArticleParams) (*CreateArticleResponse, error)
 	// Update()
-	// Delete()
-	// Favorite()
-	// Unfavorite()
-	// ListTags()
+	Delete(params types.DeleteArticleParams) (*DeleteArticleResponse, error)
+	Favorite(params types.FavoriteArticleParams) (*FavoriteArticleResponse, error)
+	Unfavorite(params types.UnfavoriteArticleParams) (*UnfavoriteArticleResponse, error)
 }
 
 type ArticleServiceImpl struct {

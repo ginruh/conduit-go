@@ -252,22 +252,15 @@ type DeleteArticleParams struct {
 	Slug string
 }
 
-func (q Queries) DeleteArticle(params DeleteArticleParams) (models.ArticleDetails, error) {
-	article, err := q.GetArticle(GetArticleParams{
-		Slug:          params.Slug,
-		CurrentUserID: sql.NullString{},
-	})
-	if err != nil {
-		return models.ArticleDetails{}, err
-	}
-	_, err = q.db.NamedExec(
+func (q Queries) DeleteArticle(params DeleteArticleParams) (string, error) {
+	_, err := q.db.NamedExec(
 		`DELETE FROM article WHERE slug = :article_slug`,
 		map[string]interface{}{
 			"article_slug": params.Slug,
 		},
 	)
 	if err != nil {
-		return models.ArticleDetails{}, err
+		return "", err
 	}
-	return article, nil
+	return params.Slug, nil
 }

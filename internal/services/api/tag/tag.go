@@ -5,7 +5,7 @@ import (
 )
 
 type TagService interface {
-	// List()
+	List() (*ListTagsResponse, error)
 }
 
 type TagServiceImpl struct {

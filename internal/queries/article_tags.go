@@ -21,3 +21,19 @@ func (q Queries) CreateArticleTags(params CreateArticleTagsParams) error {
 	}
 	return err
 }
+
+func (q Queries) ListArticleTags() ([]string, error) {
+	var articleTags []string
+	rows, err := q.db.Queryx(`select distinct tag_name from article_tags`)
+	for rows.Next() {
+		var articleTag string
+		if err = rows.Scan(&articleTag); err != nil {
+			break
+		}
+		articleTags = append(articleTags, articleTag)
+	}
+	if err != nil {
+		return []string{}, err
+	}
+	return articleTags, nil
+}
